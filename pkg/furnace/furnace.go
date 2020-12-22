@@ -40,13 +40,13 @@ func (f *Furnace) enqueue(packages []Package) {
 }
 
 // Dequeue removes a package from the build queue.
-func (f *Furnace) dequeue() Package {
-	f.mx.Lock()
-	defer f.mx.Unlock()
-	pkg := f.buildQueue[0]
-	f.buildQueue = f.buildQueue[1:]
-	return pkg
-}
+// func (f *Furnace) dequeue() Package {
+// 	f.mx.Lock()
+// 	defer f.mx.Unlock()
+// 	pkg := f.buildQueue[0]
+// 	f.buildQueue = f.buildQueue[1:]
+// 	return pkg
+// }
 
 func (f *Furnace) Build(ctx context.Context, req *api.BuildRequest) (*api.BuildResponse, error) {
 	packages := make([]Package, len(req.GetPackages()))
