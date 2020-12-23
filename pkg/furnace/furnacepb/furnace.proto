@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package foundry;
+option go_package = "pkg/furnace/furnacepb";
+
+service Furnace {
+  rpc Build (BuildRequest) returns (BuildResponse);
+  rpc IsQueued (IsQueuedRequest) returns (IsQueuedResponse);
+}
+
+message BuildRequest {
+  repeated Package packages = 1;
+  bool update = 2;
+}
+
+message BuildResponse {
+}
+
+message IsQueuedRequest {
+  Package package = 1;
+}
+
+message IsQueuedResponse {
+  bool status = 1;
+}
+
+message Package {
+  string name = 1;
+  string version = 2;
+}
