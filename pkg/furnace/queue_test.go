@@ -76,12 +76,10 @@ func TestGetItems(t *testing.T) {
 	cases := []struct {
 		name  string
 		input []Package
-		// want []Package
 	}{
 		{
 			name:  "a few items in the queue",
 			input: defaultPackages,
-			// want: defaultPackages,
 		},
 		{
 			name: "zero items in the queue",
