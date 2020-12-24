@@ -42,7 +42,6 @@ func (f *Furnace) Build(ctx context.Context, req *api.BuildRequest) (*api.BuildR
 	}, nil
 }
 
-// TODO(prmsrswt): Implement IsQueued.
 func (f *Furnace) IsQueued(ctx context.Context, req *api.IsQueuedRequest) (*api.IsQueuedResponse, error) {
 	return &api.IsQueuedResponse{
 		Status: f.buildQueue.isQueued(Package{Name: req.GetPackage().GetName()}),
