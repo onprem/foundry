@@ -10,10 +10,10 @@ service Furnace {
 
 message BuildRequest {
   repeated Package packages = 1;
-  bool update = 2;
 }
 
 message BuildResponse {
+  string message = 1;
 }
 
 message IsQueuedRequest {
@@ -26,5 +26,4 @@ message IsQueuedResponse {
 
 message Package {
   string name = 1;
-  string version = 2;
 }

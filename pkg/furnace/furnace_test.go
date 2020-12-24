@@ -20,7 +20,7 @@ func TestBuild(t *testing.T) {
 		{
 			name: "req with single package",
 			req: &api.BuildRequest{
-				Packages: []*api.Package{{Name: "yay", Version: "10.1.2-1"}},
+				Packages: []*api.Package{{Name: "yay"}},
 			},
 			want:    &api.BuildResponse{},
 			wantErr: false,
@@ -37,11 +37,11 @@ func TestBuild(t *testing.T) {
 			name: "req with multiple packages",
 			req: &api.BuildRequest{
 				Packages: []*api.Package{
-					{Name: "timeshift", Version: "20.11.1+3+g08d0e59-2"},
-					{Name: "yay", Version: "10.1.2-1"},
-					{Name: "octopi", Version: "0.10.0-2"},
-					{Name: "polybar", Version: "3.5.2-1"},
-					{Name: "godot", Version: "3.2.3-1"},
+					{Name: "timeshift"},
+					{Name: "yay"},
+					{Name: "octopi"},
+					{Name: "polybar"},
+					{Name: "godot"},
 				},
 			},
 			want:    &api.BuildResponse{},
