@@ -129,5 +129,5 @@ var _Furnace_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "pkg/furnace/furnacepb/furnace.proto",
+	Metadata: "furnace.proto",
 }
