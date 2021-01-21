@@ -52,5 +52,5 @@ type furnaceConfig struct {
 func (fc *furnaceConfig) registerFlags(cmd *cobra.Command) {
 	fc.grpc.registerFlag(cmd)
 	cmd.Flags().IntVar(&fc.maxConcurrency, "max-concurrency", 1, "Maximum number of packages to build at the same time")
-	cmd.Flags().IntVar(&fc.queueLimit, "queue-limit", 100, "Maximum number of packages to have in build queue at one time. If this limit is reached then the request will wait for the queue to accomodate the packages.")
+	cmd.Flags().IntVar(&fc.queueLimit, "queue-limit", 100, "Maximum number of packages to have in build queue at one time. If this limit is reached then the request will wait for the queue to accommodate the packages.")
 }

@@ -28,7 +28,7 @@ func TestFurnaceBuild(t *testing.T) {
 			req: &api.BuildRequest{
 				Packages: []*api.Package{},
 			},
-			wantErr: false,
+			wantErr: true,
 		},
 		{
 			name: "req with multiple packages",

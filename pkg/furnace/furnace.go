@@ -36,6 +36,9 @@ func RegisterFurnaceServer(s *grpc.Server, fc *Furnace) {
 }
 
 func (f *Furnace) Build(ctx context.Context, req *api.BuildRequest) (*api.BuildResponse, error) {
+	if len(req.GetPackages()) < 1 {
+		return nil, fmt.Errorf("atleast one package required")
+	}
 	pkgNames := make([]string, len(req.GetPackages()))
 	for i, v := range req.GetPackages() {
 		pkgNames[i] = v.GetName()
