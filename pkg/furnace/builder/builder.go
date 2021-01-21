@@ -1,7 +1,6 @@
 package builder
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -11,18 +10,6 @@ import (
 	"github.com/mikkeloscar/aur"
 )
 
-type status string
-
-const (
-	StatusBuilding status = "building"
-	StatusError    status = "error"
-	StatusDefault  status = ""
-)
-
-var (
-	ErrAlreadyBuilding error = errors.New("package is already building")
-)
-
 type Builder interface {
 	Build(aur.Pkg) error
 }
@@ -30,16 +17,12 @@ type Builder interface {
 // MakepkgBuilder implements the Builder interface. It builds the
 // packages using the `makepkg` script.
 type MakepkgBuilder struct {
-	pkgStatus pkgMap
-	wd        string
+	wd string
 }
 
 func NewMakepkgBuilder(workDir string) *MakepkgBuilder {
 	return &MakepkgBuilder{
 		wd: workDir,
-		pkgStatus: pkgMap{
-			pkgs: make(map[string]status),
-		},
 	}
 }
 
@@ -49,7 +32,7 @@ func (mb *MakepkgBuilder) build(pkg aur.Pkg) error {
 	if err := gitClone(pkgDir, repoURL); err != nil {
 		return err
 	}
-	cmd := exec.Command("makepkg", "-sf")
+	cmd := exec.Command("makepkg", "-dfmc")
 	cmd.Dir = pkgDir
 	if err := cmd.Run(); err != nil {
 		return err
@@ -62,15 +45,9 @@ func (mb *MakepkgBuilder) build(pkg aur.Pkg) error {
 // TODO(prmsrswt): Remove dependency on `makepkg` by doing
 // everything natively.
 func (mb *MakepkgBuilder) Build(pkg aur.Pkg) error {
-	err := mb.pkgStatus.setBuilding(pkg)
-	if err != nil {
-		return err
-	}
 	if err := mb.build(pkg); err != nil {
-		mb.pkgStatus.set(pkg, StatusError)
 		return fmt.Errorf("building package: %w", err)
 	}
-	mb.pkgStatus.set(pkg, StatusDefault)
 	return nil
 }
 

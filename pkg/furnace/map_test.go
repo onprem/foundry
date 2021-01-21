@@ -1,4 +1,4 @@
-package builder
+package furnace
 
 import (
 	"testing"
@@ -58,7 +58,7 @@ func TestPkgMapGetSet(t *testing.T) {
 	}
 }
 
-func TestMapSetBuilding(t *testing.T) {
+func TestMapSetQueued(t *testing.T) {
 	n := 600
 	pm := pkgMap{
 		pkgs: make(map[string]status),
@@ -69,7 +69,7 @@ func TestMapSetBuilding(t *testing.T) {
 	errchan := make(chan error, 600)
 	for i := 0; i < n; i++ {
 		go func() {
-			err := pm.setBuilding(pkg)
+			err := pm.setQueued(pkg)
 			errchan <- err
 		}()
 	}
