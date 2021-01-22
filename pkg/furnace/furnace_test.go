@@ -28,7 +28,7 @@ func TestFurnaceBuild(t *testing.T) {
 			req: &api.BuildRequest{
 				Packages: []*api.Package{},
 			},
-			wantErr: false,
+			wantErr: true,
 		},
 		{
 			name: "req with multiple packages",
@@ -48,7 +48,7 @@ func TestFurnaceBuild(t *testing.T) {
 		tc := v
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
-			f := NewFurnace(1, log.NewNopLogger())
+			f := NewFurnace(1, 100, log.NewNopLogger())
 			res, err := f.Build(context.Background(), tc.req)
 			if tc.wantErr {
 				assert.NotNil(t, err, "error should not be nil")
@@ -61,7 +61,7 @@ func TestFurnaceBuild(t *testing.T) {
 }
 
 func TestFurnaceIsQueued(t *testing.T) {
-	f := NewFurnace(1, log.NewNopLogger())
+	f := NewFurnace(1, 100, log.NewNopLogger())
 	_, err := f.Build(context.Background(), &api.BuildRequest{
 		Packages: []*api.Package{
 			{Name: "timeshift"},

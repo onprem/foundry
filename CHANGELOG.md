@@ -13,7 +13,7 @@ We use _breaking :warning:_ to mark changes that are not backward compatible (re
 
 ### Added
 - [#7](https://github.com/prmsrswt/foundry/pull/7) Furnace: Add gRPC protobuf. Add `foundry furnace` sub-command to run the Furnace component.
-
+- [#12](https://github.com/prmsrswt/foundry/pull/12) Furnace: Implement a package builder based on `makepkg`
 ### Fixed
 
 ### Changed
