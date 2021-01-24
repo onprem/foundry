@@ -53,7 +53,7 @@ func setupFurnace(config *furnaceConfig, g *run.Group, logger log.Logger, _ *pro
 			fc.Start(makepkgBuilder)
 			return nil
 		}, func(_ error) {
-			// TODO(prmsrswt): Use context canceling in fc.Start.
+			fc.Stop()
 		})
 	}
 }
