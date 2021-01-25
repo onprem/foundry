@@ -36,3 +36,7 @@ func (f *Furnace) Start(bldr builder.Builder) {
 	}
 	wg.Wait()
 }
+
+func (f *Furnace) Stop() {
+	close(f.buildQueue)
+}

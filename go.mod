@@ -9,7 +9,10 @@ require (
 	github.com/golang/protobuf v1.4.3
 	github.com/imdario/mergo v0.3.11 // indirect
 	github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351 // indirect
+	github.com/metalmatze/signal v0.0.0-20201002155117-1bb3cf83a279
 	github.com/mikkeloscar/aur v0.0.0-20200113170522-1cb4e2949656
+	github.com/oklog/run v1.0.0
+	github.com/prometheus/client_golang v1.5.1
 	github.com/spf13/cobra v1.1.1
 	github.com/stretchr/testify v1.6.1
 	github.com/xanzy/ssh-agent v0.3.0 // indirect

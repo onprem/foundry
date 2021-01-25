@@ -5,6 +5,8 @@ import (
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
+	"github.com/oklog/run"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 
@@ -12,34 +14,47 @@ import (
 	"github.com/prmsrswt/foundry/pkg/furnace/builder"
 )
 
-func registerFurnace(cmd *cobra.Command, logger log.Logger) {
+func registerFurnace(cmd *cobra.Command, g *run.Group, logger log.Logger, metrics *prometheus.Registry) {
 	config := &furnaceConfig{}
 	furnaceCmd := &cobra.Command{
 		Use:   "furnace",
 		Short: "Run the Furnace component",
 		Run: func(cmd *cobra.Command, args []string) {
-			runFurnace(config, logger)
+			setupFurnace(config, g, logger, metrics)
 		},
 	}
 	cmd.AddCommand(furnaceCmd)
 	config.registerFlags(furnaceCmd)
 }
 
-func runFurnace(config *furnaceConfig, logger log.Logger) {
-	conn, err := net.Listen("tcp", config.grpc.bindAddress)
-	if err != nil {
-		level.Error(logger).Log("msg", err.Error())
-	}
-	s := grpc.NewServer()
+func setupFurnace(config *furnaceConfig, g *run.Group, logger log.Logger, _ *prometheus.Registry) {
 	fc := furnace.NewFurnace(config.maxConcurrency, config.queueLimit, logger)
-	furnace.RegisterFurnaceServer(s, &fc)
 
-	makepkgBuilder := builder.NewMakepkgBuilder("/tmp/foundry/furnace")
-	go fc.Start(makepkgBuilder)
+	{
+		conn, err := net.Listen("tcp", config.grpc.bindAddress)
+		if err != nil {
+			// TODO(prmsrswt): this is a non-recoverable error, handle it like one.
+			level.Error(logger).Log("msg", err.Error())
+		}
+		s := grpc.NewServer()
+		furnace.RegisterFurnaceServer(s, &fc)
 
-	level.Info(logger).Log("msg", "starting gRPC server", "addr", config.grpc.bindAddress)
-	if err = s.Serve(conn); err != nil {
-		level.Error(logger).Log("msg", err.Error())
+		g.Add(func() error {
+			level.Info(logger).Log("msg", "starting gRPC server", "addr", config.grpc.bindAddress)
+			return s.Serve(conn)
+		}, func(_ error) {
+			s.GracefulStop()
+		})
+	}
+
+	{
+		makepkgBuilder := builder.NewMakepkgBuilder("/tmp/foundry/furnace")
+		g.Add(func() error {
+			fc.Start(makepkgBuilder)
+			return nil
+		}, func(_ error) {
+			fc.Stop()
+		})
 	}
 }
 
