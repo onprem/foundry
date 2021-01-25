@@ -42,7 +42,6 @@ func main() {
 	{
 		defaultHelpFunc := rootCmd.HelpFunc()
 		rootCmd.SetHelpFunc(func(c *cobra.Command, s []string) {
-			logger.Log("msg", "yaaaay")
 			isHelp = true
 			defaultHelpFunc(c, s)
 		})
@@ -57,12 +56,13 @@ func main() {
 	}
 
 	{
-		sig := make(chan os.Signal, 2)
+		sig := make(chan os.Signal, 1)
 		g.Add(func() error {
 			signal.Notify(sig, os.Interrupt, syscall.SIGINT)
 			<-sig
 			return nil
 		}, func(_ error) {
+			level.Info(logger).Log("msg", "caught interrupt, exiting")
 			signal.Stop(sig)
 			close(sig)
 		})
