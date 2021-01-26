@@ -47,7 +47,7 @@ func main() {
 		})
 	}
 	if err := rootCmd.Execute(); err != nil {
-		level.Error(logger).Log("msg", err.Error())
+		level.Error(logger).Log("err", err)
 		return
 	}
 	// Short circuit in case help command is called.
