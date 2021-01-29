@@ -19,22 +19,22 @@ func registerFurnace(cmd *cobra.Command, g *run.Group, logger log.Logger, metric
 	furnaceCmd := &cobra.Command{
 		Use:   "furnace",
 		Short: "Run the Furnace component",
-		Run: func(cmd *cobra.Command, args []string) {
-			setupFurnace(config, g, logger, metrics)
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return setupFurnace(config, g, logger, metrics)
 		},
 	}
 	cmd.AddCommand(furnaceCmd)
 	config.registerFlags(furnaceCmd)
 }
 
-func setupFurnace(config *furnaceConfig, g *run.Group, logger log.Logger, _ *prometheus.Registry) {
+func setupFurnace(config *furnaceConfig, g *run.Group, logger log.Logger, reg prometheus.Registerer) error {
 	fc := furnace.NewFurnace(config.maxConcurrency, config.queueLimit, logger)
 
 	{
 		conn, err := net.Listen("tcp", config.grpc.bindAddress)
 		if err != nil {
-			// TODO(prmsrswt): this is a non-recoverable error, handle it like one.
-			level.Error(logger).Log("msg", err.Error())
+			level.Error(logger).Log("msg", "listening on gRPC bind address", "err", err)
+			return err
 		}
 		s := grpc.NewServer()
 		furnace.RegisterFurnaceServer(s, &fc)
@@ -48,14 +48,16 @@ func setupFurnace(config *furnaceConfig, g *run.Group, logger log.Logger, _ *pro
 	}
 
 	{
+		// TODO(prmsrswt): Make this directory configurable.
 		makepkgBuilder := builder.NewMakepkgBuilder("/tmp/foundry/furnace")
 		g.Add(func() error {
-			fc.Start(makepkgBuilder)
+			fc.Start(builder.BuilderWithMetrics(makepkgBuilder, reg))
 			return nil
 		}, func(_ error) {
 			fc.Stop()
 		})
 	}
+	return nil
 }
 
 type furnaceConfig struct {

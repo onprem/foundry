@@ -13,8 +13,9 @@ We use _breaking :warning:_ to mark changes that are not backward compatible (re
 
 ### Added
 - [#7](https://github.com/prmsrswt/foundry/pull/7) Furnace: Add gRPC protobuf. Add `foundry furnace` sub-command to run the Furnace component.
-- [#12](https://github.com/prmsrswt/foundry/pull/12) Furnace: Implement a package builder based on `makepkg`
-- [#15](https://github.com/prmsrswt/foundry/pull/15) Add internal endpoints (healthchecks, metrics, pprof) and gracefully shutdown everything
+- [#12](https://github.com/prmsrswt/foundry/pull/12) Furnace: Implement a package builder based on `makepkg`.
+- [#15](https://github.com/prmsrswt/foundry/pull/15) Add internal endpoints (healthchecks, metrics, pprof) and gracefully shutdown everything.
+- [#17](https://github.com/prmsrswt/foundry/pull/17) Furnace: Instrument makepkg builder.
 ### Fixed
 
 ### Changed
