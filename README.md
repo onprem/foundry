@@ -1,6 +1,7 @@
 # `foundry`
 
 [![Coverage Status](https://coveralls.io/repos/github/prmsrswt/foundry/badge.svg?branch=main)](https://coveralls.io/github/prmsrswt/foundry?branch=main)
+[![Docker Repository on Quay](https://quay.io/repository/prmsrswt/foundry/status "Docker Repository on Quay")](https://quay.io/repository/prmsrswt/foundry)
 
 ## Overview
 
